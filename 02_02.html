@@ -39,7 +39,7 @@
             background-repeat: no-repeat;
             background-position: 50% 50%;
             background-size: contain;
-            transition: 1s;
+            transition: .3s;
             /* animation: moving infinite alternate; */
         }
 
@@ -49,33 +49,40 @@
         }
 
         .ilbuni.i1 {
-            left: 5%;
-            bottom: 5%;
+            left: 0;
+            bottom: 0;
             background-image: url('./Interactive_section4-js-start/images/ilbuni_0.png');
             animation-duration: 3s;
         }
 
         .ilbuni.i2 {
-            left: 10%;
-            bottom: 3%;
+            left: 0;
+            bottom: 0;
             background-image: url('./Interactive_section4-js-start/images/ilbuni_1.png');
             animation-duration: 5s;
         }
 
         .ilbuni.i3 {
-            left: 7%;
-            bottom: 6%;
+            left: 0;
+            bottom: 0;
             background-image: url('./Interactive_section4-js-start/images/ilbuni_2.png');
             animation-duration: 2s;
         }
 
-        .pick {
-            border: 2px solid blue;
+        .timer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 60px;
+            font-weight: bold;
+            padding: 20px;
+            z-index: 10;
         }
     </style>
 </head>
 
 <body>
+    <div id="timer" class="timer"></div>
     <div class="stage">
         <div class="ilbuni i1"></div>
         <div class="ilbuni i2"></div>
@@ -83,30 +90,42 @@
     </div>
     <script>
         (function () {
-            const ilbuniGroup = document.querySelectorAll('.ilbuni');
-            const stage = document.querySelector('.stage');
+            window.alert("게임을 시작합니다.");
 
+            const timer = document.querySelector("#timer")
+            let count = 0;
+            setInterval(() => {
+                count++;
+                timer.innerText = count;
+            }, 1000);
+
+
+            const stage = document.querySelector('.stage');
+            const ilbuniGroup = document.querySelectorAll('.ilbuni');
             function clickHandler(e) {
-                console.debug(e.currentTarget);
-                // console.debug(e.currentTarget);
-                // stage.removeChild();
-                this.classList.toggle("pick");
-                this.parentNode.removeChild(this);
+                if (e.target.classList.contains("ilbuni"))
+                    stage.removeChild(e.target);
+
+                if (stage.querySelectorAll(".ilbuni").length === 0)
+                    window.alert(`플레이타임: ${count}초`);
             }
 
-            for (let i = 0; i < ilbuniGroup.length; i++) {
-                ilbuniGroup[i].addEventListener('click', clickHandler);
+
+            stage.addEventListener('click', clickHandler);
+
+
+            function randomMoveCharacters() {
+                for (let i = 0; i < ilbuniGroup.length; i++) {
+                    const randomWidth = Math.random() * window.innerWidth;
+                    const randomHeight = Math.random() * window.innerHeight;
+                    // console.debug(randomWidth, randomHeight);
+                    ilbuniGroup[i].style.transform = `translate(${randomWidth}px, -${randomHeight}px)`;
+                }
             }
 
             setInterval(() => {
-                for (let i = 0; i < ilbuniGroup.length; i++) {
-                    const randomWidth = Math.random(window.innerWidth) * 1000;
-                    const randomHeight = Math.random(window.innerHeight) * 1000;
-                    console.debug(randomWidth)
-                    console.debug(randomHeight)
-                    ilbuniGroup[i].style.transform = `translate(${randomWidth}px, ${randomHeight}px)`;
-                }
-            }, 1000);
+                randomMoveCharacters();
+            }, 500);
         })();
     </script>
 </body>
